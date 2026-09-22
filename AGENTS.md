@@ -3,60 +3,52 @@
 Punto de entrada para cualquier agente de código —Claude, Codex, Cursor, Copilot, Gemini u otro—
 que abra este repositorio.
 
-Este proyecto no depende de ninguna IA concreta. Lo único que necesita el agente es poder leer
-ficheros del repo y escribir en él.
-
 ---
 
 ## Qué es esto
 
-Un tutor adaptativo cuyo estado vive en ficheros. El agente lee tu perfil y tus errores, decide qué
-practicas hoy según el tiempo y la energía que tengas, y cada pocos días genera el siguiente tramo
-de currículo. La materia de referencia es inglés, pero la estructura sirve para cualquier habilidad
-que se aprenda **produciendo y recibiendo corrección**.
+La aplicación web de un tutor de inglés. **El tutor en sí no está aquí**: vive en
+[ai-skill-coach](https://github.com/AlejandroVegaFullstackDev/ai-skill-coach), funciona con
+cualquier agente y no necesita esta web.
+
+Esto es la interfaz para practicar desde el móvil. Un back, un front, ambos en Vercel.
 
 ## Antes de tocar nada
 
 | Lee esto | Para |
 |---|---|
-| [`README.md`](README.md) | Qué hace el proyecto y por qué cuesta cero |
-| [`ARCHITECTURE.md`](ARCHITECTURE.md) | Dónde vive cada dato y por qué |
-| [`ROADMAP.md`](ROADMAP.md) | Qué ya está decidido — no lo reabras sin motivo |
+| [`README.md`](README.md) | Qué es y qué no, y cómo se relaciona con el otro repo |
+| [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) | Dónde vive cada dato y por qué |
+| [`ROADMAP.md`](ROADMAP.md) | Qué ya está decidido y qué sigue abierto |
 | [`CLAUDE.md`](CLAUDE.md) | Reglas de ingeniería de backend, agnósticas de lenguaje |
 | [`CLAUDE_FRONTEND.md`](CLAUDE_FRONTEND.md) | Reglas de interfaz |
 | [`SECURITY.md`](SECURITY.md) | Qué nunca entra al control de versiones |
 
-Los dos ficheros `CLAUDE*.md` se llaman así por la convención de Claude Code, pero **su contenido no
-es específico de Claude**: son reglas de ingeniería normales. Cualquier agente debe seguirlas.
+`CLAUDE.md` y `CLAUDE_FRONTEND.md` se llaman así por la convención de Claude Code, pero su
+contenido son reglas de ingeniería normales. Cualquier agente debe seguirlas.
+
+## El estado del proyecto
+
+**No hay código.** Las carpetas de `apps/` están vacías a propósito: faltan dos decisiones —base
+de datos y sincronización con el repo del tutor— que determinan la forma del código.
+
+Si te piden implementar algo y esas decisiones siguen abiertas, **dilo antes de escribir**. No las
+resuelvas por tu cuenta eligiendo una librería.
 
 ## Reglas que no se negocian
 
-1. **`private/` no se commitea nunca.** Contiene perfil, progreso, errores y grabaciones de una
-   persona real. Un repositorio público es para siempre.
-2. **Las grabaciones de voz son datos biométricos.** El análisis corre en la máquina del usuario. No
-   propongas subir audio a ningún servicio sin decirlo explícitamente en el README.
-3. **No infles el nivel del usuario.** Un tutor que adula no sirve. Si no hay evidencia de que algo
-   se domina, no se da por dominado.
-4. **No respondas exámenes cuyo resultado se entrega a un tercero.** Un certificado obtenido así
-   describe a la IA, no a la persona.
-5. **La IA trabaja entre sesiones, no durante.** Los ejercicios se pre-generan y se versionan. Eso
-   es lo que mantiene el coste en cero; no lo rompas añadiendo llamadas en tiempo de ejecución.
-
-## Cómo se arranca una sesión
-
-El usuario abre su agente y dice cuánto tiempo y qué condiciones tiene:
-
-```
-Lee private/profile.md, private/progress.md y private/mistakes.md.
-
-Tengo 17 minutos. Energía baja. No puedo hablar en voz alta.
-No me enseñes lo que ya demuestro correctamente.
-
-Dame la actividad de mayor valor que pueda hacer ahora.
-Corrígeme al final, no durante.
-Actualiza mi progreso y anota los errores que se repitan.
-```
-
-Si `private/profile.md` no existe todavía, cópialo de
-[`config/profile.example.md`](config/profile.example.md) y pide al usuario que lo rellene con su
-nivel **real y con fuente**. No lo rellenes tú a ojo.
+1. **La app no llama a ningún modelo de IA.** El contenido está pre-generado por el agente entre
+   sesiones. Añadir una llamada en tiempo de ejecución rompe el coste cero y la independencia de
+   cualquier API.
+2. **Progreso y contenido no se mezclan.** Tienen tamaños, frecuencias de escritura y sensibilidad
+   opuestas. Ver `docs/ARCHITECTURE.md`.
+3. **El acceso a datos va detrás de una interfaz.** Con proveedores de tier gratuito, poder
+   cambiar no es un lujo.
+4. **Todo detrás de autenticación.** Un solo usuario, pero son datos personales de aprendizaje.
+5. **Las grabaciones de voz son datos biométricos.** El análisis corre en la máquina del usuario.
+   No propongas subir audio a ningún servicio sin decirlo explícitamente en el README.
+6. **El micrófono se habilita por ruta, nunca globalmente**, y sin tocar el resto de cabeceras de
+   seguridad.
+7. **Presupuesto cero.** Ninguna dependencia de pago, ni "gratis hasta cierto volumen" sin decirlo.
+8. **Cada dependencia nueva se justifica por escrito.** Esto lo mantiene una persona en ratos
+   libres; cada dependencia es superficie de ataque y deuda.

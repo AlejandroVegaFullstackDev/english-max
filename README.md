@@ -1,153 +1,96 @@
 # english-max
 
-Un tutor adaptativo que vive en un repositorio y funciona con un agente de código.
+La aplicación web. Un back y un front, desplegados en Vercel.
 
-No es un curso ni una app de flashcards. Es un **esqueleto**: el agente lee tu perfil, mira en qué
-fallas, y decide qué practicas hoy con el tiempo y la energía que tengas. El contenido se
-pre-genera y se versiona; la IA trabaja **entre sesiones**, no durante cada ejercicio.
-
-La implementación de referencia es inglés B1 → B2. La estructura sirve para cualquier materia que
-se aprenda produciendo y recibiendo corrección.
-
-> **Estado: día 1.** Están las reglas, la arquitectura y la estructura. No hay currículo todavía, y
-> es deliberado — ver [ROADMAP.md](ROADMAP.md).
+> **Estado: esqueleto.** Están las reglas de ingeniería, la arquitectura y la estructura de
+> carpetas. No hay código todavía, y es deliberado — ver [ROADMAP.md](ROADMAP.md).
 
 ---
 
-## Qué problema resuelve
+## Qué es, y qué no
 
-Las apps de idiomas te hacen repasar presente simple durante meses porque no tienen forma de saber
-que ya lo dominas. Y un curso lineal asume que tienes una hora libre y ganas.
+Esto es **la interfaz**. El tutor —la lógica de qué enseñar, cómo corregir y qué recordar— vive en
+otro repositorio: [ai-skill-coach](https://github.com/AlejandroVegaFullstackDev/ai-skill-coach),
+que funciona con cualquier agente de código y no necesita esta web para nada.
 
-Aquí la unidad no es la lección, es **el hueco que tengas**:
-
-```
-Tengo 7 minutos.
-Estoy en el bus, puedo escuchar pero no hablar.
-Tengo 40 minutos pero estoy fundido.
-```
-
-El agente responde con **una** actividad, elegida según tu nivel real, tus errores recientes y esas
-condiciones. Cada ejercicio lleva metadatos —habilidad, duración, si necesita micrófono— así que
-elegir es filtrar, no improvisar.
-
-### El ciclo
-
-```
-Input  →  Output  →  Correction  →  Repetition
-```
-
-Aprender algo no cuenta hasta que lo produces espontáneamente días después. Si falla, vuelve al
-ciclo. Eso es lo que separa esto de meter tarjetas en Anki.
-
----
-
-## Por qué cuesta cero
-
-Llamar a un modelo en cada ejercicio es caro y lento. Aquí la IA trabaja **entre sesiones**:
-
-1. Practicas con ejercicios que ya existen en el repo. Sin red, sin API, instantáneo.
-2. Cada pocos días le pasas tu progreso al agente.
-3. El agente analiza dónde fallas y **genera el siguiente tramo de currículo**, que se commitea como
-   contenido nuevo.
-
-El único coste recurrente es tu suscripción al agente, que ya tienes si programas con uno.
-
----
-
-## Privacidad: qué es público y qué no
-
-Este repositorio es open source **para que copies el motor, no para que veas el progreso de nadie.**
-
-| Público | Privado (`private/`, ignorado por git) |
-|---|---|
-| Reglas de ingeniería | Tu nivel y tus debilidades |
-| Arquitectura | Tu progreso y errores |
-| Plantilla de perfil | Tus grabaciones de voz |
-| Currículo y ejercicios | Tu plan personal |
-
-Un perfil de aprendizaje dice en qué eres flojo. Un repositorio público es para siempre. Ver
-[`private/README.md`](private/README.md) y [SECURITY.md](SECURITY.md).
-
-**Las grabaciones de voz son datos biométricos.** El análisis de pronunciación corre **en tu
-máquina**; tu audio no sale de ahí.
-
----
-
-## Empezar
-
-```bash
-git clone <este-repo> && cd english-max
-cp config/profile.example.md private/profile.md
-```
-
-Rellena `private/profile.md` con tu nivel **real y con fuente**, no con el que te gustaría tener.
-Después abre tu agente y dile cuánto tiempo tienes.
-
-Si no sabes tu nivel, haz un test que **mida el habla** antes de empezar. Un test de lectura y
-gramática puntúa más alto y no predice cómo te irá en una conversación.
-
----
-
-## Voz
-
-Todo local y gratuito:
-
-| Pieza | Para qué | Licencia |
+| | ai-skill-coach | english-max (esto) |
 |---|---|---|
-| [OpenPronounce](https://github.com/Halleck45/OpenPronounce) | Evaluación **fonema a fonema**: te dice qué sonido dijiste de verdad, en IPA | MIT |
-| [Transformers.js](https://github.com/huggingface/transformers.js) | Whisper y TTS dentro del navegador, sin servidor | Apache-2.0 |
-| [Piper](https://github.com/OHF-Voice/piper1-gpl) · Kokoro | TTS neuronal offline para pre-generar audio | GPL-3.0 · Apache-2.0 |
-| Web Speech API | Dictado y voz nativos. iOS Safari 14.5+ (parcial) | — |
+| Qué es | El tutor. Comandos y reglas para un agente | La app para practicar desde el móvil |
+| Dónde corre | En tu terminal, con tu agente | En Vercel, desde cualquier navegador |
+| Estado | Ficheros en el repo | Base de datos |
+| Para qué | Generar currículo, evaluar, planificar | Hacer los ejercicios en los huecos del día |
 
-**Por qué OpenPronounce y no solo Whisper:** un transcriptor te *entiende*. Dices *"eschool"* y
-escribe `school`, porque su trabajo es adivinar tu intención. Te da la razón y no aprendes nada.
-OpenPronounce devuelve el fonema que realmente pronunciaste, que es lo único que expone ese tipo de
-error.
-
-Limitación honesta: ~10% de error fonémico incluso con voz nativa limpia, y peor con acento marcado.
-Sirve para **tendencia y patrones repetidos**, no para tomarse un número absoluto en serio.
+**La separación importa.** El agente genera el contenido entre sesiones; la web solo lo sirve y
+registra cómo fue. Por eso la web puede ser barata y rápida: no llama a ningún modelo.
 
 ---
 
-## Estructura
+## Por qué existe
 
-```
-config/        plantilla de perfil, objetivos
-private/       tus datos — ignorado por git
-curriculum/    contenido generado, por nivel
-sessions/      actividades por duración
-mistakes/      errores recurrentes (tuyos: ignorado)
-prompts/       instrucciones para el agente
-vocabulary/ grammar/ listening/ speaking/ writing/
-```
+El tutor en el repositorio funciona en el PC. Pero los huecos reales —el bus, la cola del banco,
+diez minutos entre reuniones— ocurren con el teléfono en la mano.
 
-Si abres esto con un agente, empieza por [AGENTS.md](AGENTS.md) — funciona con cualquiera, no solo
-con Claude. Reglas de desarrollo: [CLAUDE.md](CLAUDE.md) (backend, agnóstico de lenguaje) y
-[CLAUDE_FRONTEND.md](CLAUDE_FRONTEND.md). Decisiones y su porqué: [ARCHITECTURE.md](ARCHITECTURE.md).
+Requisitos que salen de ahí:
+
+- **Móvil primero.** iPhone, sin instalar nada.
+- **Accesible desde cualquier dispositivo**: PC del trabajo, PC de casa, Android.
+- **Detrás de autenticación.** Son datos personales de aprendizaje.
+- **Coste objetivo: cero.** Tier gratuito o no se hace.
+- **Funciona sin llamar a ninguna IA.** El contenido ya existe cuando lo abres.
 
 ---
 
-## Cómo se relaciona con las colecciones de skills que ya existen
+## Arquitectura
 
-Hay catálogos grandes de *agent skills* — [anthropics/skills](https://github.com/anthropics/skills)
-(oficial, Apache-2.0, con especificación y plantilla),
-[VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills) (1000+),
-[ComposioHQ](https://github.com/ComposioHQ/awesome-claude-skills),
-[hesreallyhim/awesome-claude-code](https://github.com/hesreallyhim/awesome-claude-code).
+```
+apps/web/         front — lo que se ve
+apps/api/         back  — endpoints y acceso a datos
+packages/contracts/  tipos compartidos entre los dos
+docs/             decisiones y su porqué
+```
 
-Casi todas enseñan al agente **a usar una herramienta**. Existe también el patrón de convertir un
-libro técnico en una skill para consultarlo.
+El detalle, y el razonamiento detrás de cada decisión, en
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-Lo que no encontré en ninguna: un tutor que **mantiene estado sobre ti a lo largo del tiempo** —
-qué dominas, qué fallas, cuándo toca repasar— y adapta el plan a partir de eso. Ese es el hueco que
-este repo intenta llenar.
+### Los dos tipos de datos
+
+No se pueden mezclar: tienen requisitos opuestos.
+
+| | **Contenido** (los ejercicios) | **Progreso** (tú) |
+|---|---|---|
+| Tamaño | Megas, y creciendo | Kilobytes al año |
+| Quién escribe | El agente, entre sesiones | La app, en cada sesión |
+| Frecuencia de escritura | Rara | Constante |
+| ¿Sensible? | No | **Sí** |
+| Dónde | Ficheros versionados, servidos desde CDN | Base de datos |
+
+---
+
+## Reglas de desarrollo
+
+Si abres esto con un agente, empieza por [AGENTS.md](AGENTS.md).
+
+- [CLAUDE.md](CLAUDE.md) — reglas de backend, agnósticas de lenguaje
+- [CLAUDE_FRONTEND.md](CLAUDE_FRONTEND.md) — reglas de interfaz
+- [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — qué se decidió y por qué
+- [ROADMAP.md](ROADMAP.md) — lo decidido y lo que sigue abierto
+- [SECURITY.md](SECURITY.md) — qué nunca entra al control de versiones
+
+---
+
+## Lo que aún no está decidido
+
+Está en [ROADMAP.md](ROADMAP.md), pero lo importante:
+
+1. **Qué base de datos.** Tiene que ser tier gratuito y aguantar escrituras pequeñas y frecuentes.
+2. **Cómo se sincroniza con el repo del tutor.** El agente genera contenido en ficheros; la web
+   tiene que servirlo. Y el progreso que registra la web tiene que volver al agente.
+3. **Autenticación.** Un solo usuario, pero detrás de login igualmente.
+4. **El micrófono.** Las cabeceras de seguridad razonables lo desactivan en todo el sitio. Hay que
+   permitirlo **solo en la ruta de práctica**.
 
 ---
 
 ## Licencia
 
-MIT. Haz lo que quieras con el motor.
-
-Si usas Piper para TTS, ojo: Piper es GPL-3.0 y eso afecta al código derivado. Kokoro (Apache-2.0)
-evita ese problema.
+MIT.

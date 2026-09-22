@@ -1,41 +1,8 @@
 # ─────────────────────────────────────────────────────────────
-#  DATOS PERSONALES — nunca se publican
-#
-#  Este repositorio es open source. Todo lo que describa a una
-#  persona concreta (nivel, errores, grabaciones, planes) vive
-#  fuera del control de versiones.
-#
-#  Si añades una carpeta nueva con datos de usuario, añádela
-#  aquí ANTES del primer commit.
-# ─────────────────────────────────────────────────────────────
-
-private/*
-!private/README.md
-
-# Progreso, errores y evaluaciones de un usuario real
-progress/
-mistakes/*
-!mistakes/.gitkeep
-!mistakes/README.md
-assessments/*
-!assessments/.gitkeep
-!assessments/README.md
-
-# Grabaciones de voz: datos biométricos, nunca al repo
-*.mp3
-*.m4a
-*.wav
-*.ogg
-*.webm
-*.mp4
-recordings/
-
-# Salida de análisis de pronunciación (contiene transcripciones)
-*.pronunciation.json
-analysis/
-
-# ─────────────────────────────────────────────────────────────
 #  SECRETOS
+#
+#  Este repositorio es publico. Un secreto commiteado queda en
+#  el historial para siempre, aunque se borre despues.
 # ─────────────────────────────────────────────────────────────
 
 .env
@@ -49,20 +16,52 @@ credentials*
 *apikey*
 
 # ─────────────────────────────────────────────────────────────
-#  Modelos y build
+#  DATOS PERSONALES
+#
+#  Nivel, errores, progreso y grabaciones de una persona real.
+#  Si anades una carpeta con datos de usuario, anadela aqui
+#  ANTES del primer commit.
 # ─────────────────────────────────────────────────────────────
 
+private/
+progress/
+data/local/
+
+# Grabaciones de voz: datos biometricos
+*.mp3
+*.m4a
+*.wav
+*.ogg
+*.webm
+*.mp4
+recordings/
+
+# Salida de analisis de pronunciacion (contiene transcripciones)
+*.pronunciation.json
+analysis/
+
+# ─────────────────────────────────────────────────────────────
+#  Build y dependencias
+# ─────────────────────────────────────────────────────────────
+
+node_modules/
+dist/
+build/
+.next/
+.astro/
+.vercel/
+.turbo/
+coverage/
+*.tsbuildinfo
+__pycache__/
+.venv/
+venv/
+
+# Modelos descargados
 models/
 *.onnx
 *.gguf
 *.safetensors
-node_modules/
-dist/
-.astro/
-.vercel/
-__pycache__/
-.venv/
-venv/
 
 # ─────────────────────────────────────────────────────────────
 #  SO y editores

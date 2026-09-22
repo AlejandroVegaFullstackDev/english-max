@@ -1,110 +1,90 @@
 # Roadmap
 
-Registro de decisiones. `context.md` no se toca; los cambios respecto a la idea original se anotan
-aquí, con fecha y motivo.
+Registro de decisiones. `docs/idea-original.md` no se toca; los cambios respecto a la idea original
+se anotan aquí, con fecha y motivo.
 
 ---
 
 ## Decidido
 
-**2026-09-21 · El objetivo es B2, no C1.**
+**2026-09-22 · La web y el tutor son proyectos separados.**
+El tutor vive en [ai-skill-coach](https://github.com/AlejandroVegaFullstackDev/ai-skill-coach):
+comandos y reglas para un agente, funciona solo, sin web. Esta app es la interfaz para practicar
+desde el móvil. Mezclarlos habría acoplado el motor —que sirve para cualquier habilidad— a una
+aplicación concreta de inglés.
+
+**2026-09-22 · Back y front separados, ambos en Vercel.**
+El front puede ser estático y vivir en CDN porque el contenido son ficheros. El back toca la base
+de datos y las credenciales, y aislarlo deja una sola superficie con secretos.
+`packages/contracts/` es la única dependencia entre ambos.
+
+**2026-09-22 · El objetivo es B2, no C1.**
 La idea original apuntaba a C1. El nivel real de partida es B1 certificado. C1 sigue siendo el
 destino, pero no orienta las decisiones del día a día: lo que las orienta es sostener una llamada
 técnica de 30 minutos en inglés.
 
-**2026-09-21 · Nada de currículo todavía.**
-Los directorios `curriculum/` y `sessions/` están creados pero vacíos a propósito. Escribir
-ejercicios antes de saber dónde se rompe el inglés hablado es exactamente el error que la idea
-original decía querer evitar.
+**2026-09-22 · Contenido y progreso se separan.**
+Contenido en ficheros versionados, validados en build, servidos desde CDN, coste cero. Progreso en
+base de datos, detrás de una interfaz. Tienen requisitos opuestos. Ver `docs/ARCHITECTURE.md`.
 
-**2026-09-21 · El primer entregable es una línea base, no una lección.**
-Una sesión hablada de la que salgan errores reales. Con eso se llena `mistakes/` y recién ahí se
-diseña el currículo.
+**2026-09-22 · La IA no se llama desde la app.**
+El contenido está pre-generado. El agente trabaja entre sesiones. Eso es lo que mantiene el coste
+en cero y hace que la app funcione sin depender de ninguna API.
 
-**2026-09-21 · Reglas de ingeniería adoptadas.**
-`CLAUDE.md` (backend, agnóstico de lenguaje) y `CLAUDE_FRONTEND.md`. Venían escritas
-para Flask y para microfrontends federados; se generalizaron conservando la intención. Lo pospuesto
-del documento de frontend está listado con su criterio de activación en su sección 10.
+**2026-09-22 · Todo detrás de autenticación.**
+Un solo usuario, pero son datos personales de aprendizaje. Una URL difícil de adivinar no es
+autenticación.
 
-**2026-09-21 · Contenido y progreso se separan.**
-Contenido del curso en Astro Content Collections si el frontend es Astro:
-Markdown tipado, validado en build, servido desde CDN, coste cero. Progreso en JSON detrás de una
-interfaz. Ver `ARCHITECTURE.md`.
-
-**2026-09-21 · JSON, no Parquet, no comprimido.**
-Parquet es columnar y sirve para leer una columna de millones de filas; aquí se lee y reescribe un
-documento pequeño muchas veces al día, que es su peor caso. Comprimir kilobytes no ahorra nada y
-añade un paso a cada lectura.
-
-**2026-09-21 · La IA trabaja entre sesiones, no durante.**
-La web sirve ejercicios pre-generados. Cada dos o tres días se corre un comando que entrega el
-progreso, y el agente genera el siguiente tramo de currículo y lo commitea. Eso es lo que mantiene
-el coste en cero.
-
-**2026-09-21 · El repositorio es open source; los datos personales no.**
-El motor —reglas, arquitectura, currículo, herramientas— es público bajo MIT para que cualquiera
-monte su propio tutor. El perfil, el progreso, los errores y las grabaciones viven en `private/`,
-fuera del control de versiones. Ver `SECURITY.md`.
-
-**2026-09-21 · Evaluación de pronunciación a nivel de fonema.**
-[OpenPronounce](https://github.com/Halleck45/OpenPronounce): MIT, wav2vec2 + DTW, local, CPU. Un
-transcriptor normal no sirve — Whisper escucha *"eschema"* y transcribe `schema`, porque su trabajo
-es entender, no juzgar. OpenPronounce devuelve el fonema realmente pronunciado en IPA, que es lo
-único que expone la vocal epentética ante grupos con s-.
-Limitación aceptada: ~10% de error fonémico incluso con voz nativa limpia, y peor con acento
-marcado. Sirve para tendencia y patrones repetidos, no para puntuaciones absolutas.
-
-**2026-09-22 · El repositorio es público y agnóstico de agente.**
-No depende de Claude ni de ninguna IA concreta: lo único que necesita el agente es leer y escribir
-ficheros del repo. `AGENTS.md` es el punto de entrada para cualquiera de ellos. Los dos ficheros
-`CLAUDE*.md` conservan ese nombre por la convención de Claude Code, pero su contenido son reglas de
-ingeniería normales que aplica cualquier agente.
-La materia de referencia sigue siendo inglés porque es el caso real que hay que resolver; la
-estructura no asume idioma ni materia.
+**2026-09-22 · Nada de código todavía.**
+Las carpetas de `apps/` están vacías a propósito. Faltan dos decisiones —base de datos y
+sincronización— que determinan la forma del código. Escribirlo antes garantiza reescribirlo.
 
 ---
 
 ## Pendiente de decidir
 
-### 1. ¿Módulo del portafolio o proyecto aparte?
+### 1. Qué base de datos
 
-Como módulo de un sitio existente: reutiliza dominio, deploy y configuración. Aparte: no arriesga
-el sitio público.
+Requisitos: tier gratuito real sin tarjeta, escrituras pequeñas y frecuentes, lectura del
+documento entero.
 
-En cualquier caso, **detrás de autenticación**. Son datos personales de aprendizaje.
+Con tier gratuito la portabilidad no es teoría: los proveedores cambian de política. El acceso va
+detrás de una interfaz desde el primer día.
 
-### 2. ¿Publicar el tutor como *agent skill* instalable?
+### 2. Cómo se sincroniza con el repo del tutor
 
-Existe una especificación formal y una plantilla en
-[anthropics/skills](https://github.com/anthropics/skills) (Apache-2.0). Empaquetar el tutor como
-skill lo haría instalable en un comando, y no encontré ninguna skill pública que mantenga estado
-sobre el usuario a lo largo del tiempo.
+Es el problema central y no está resuelto.
 
-Decidir si este repo **es** la skill o si la skill es un envoltorio que apunta a él.
+- El agente genera contenido en ficheros de su repo. La web tiene que servirlo.
+- La web registra progreso en su base de datos. El agente tiene que leerlo para planificar.
 
-### 3. Escribir progreso desde el móvil
+Opciones a evaluar: la web lee el contenido desde el repo público del tutor; el agente lee el
+progreso vía un endpoint de solo lectura; o un export manual que el usuario corre. La tercera es
+fea y puede que sea la correcta para empezar.
 
-Si el progreso vive en Git, escribir desde el iPhone exige un commit vía API de GitHub. Funciona,
-pero es raro. La alternativa es una base de datos en tier gratuito, con la dependencia que implica.
+### 3. Autenticación
 
-### 4. Repetición espaciada
+Un usuario. Lo más simple que no sea inseguro.
 
-La regla `Input → Output → Correction → Repetition` exige saber qué toca repasar y cuándo. Hace
-falta decidir el algoritmo y dónde vive el calendario.
+### 4. Micrófono por ruta
 
-### 5. Piper o Kokoro para TTS
+Permitirlo solo en la ruta de práctica, sin tocar el resto de cabeceras de seguridad.
 
-Piper es GPL-3.0: irrelevante para uso personal, relevante si esto llega a ser negocio. Kokoro es
-Apache-2.0. Decidir antes de acoplarse a uno.
+### 5. Escribir progreso desde el móvil
+
+Resuelto si el progreso está en base de datos. Vuelve a ser un problema si se decide mantenerlo en
+Git.
 
 ### 6. Revisar intentos previos
 
-Si ya existió un proyecto parecido, mirar qué funcionó y por qué se abandonó vale más que cualquier
-decisión de arquitectura tomada en frío.
+Ya existió un intento parecido (Quickeng). Mirar qué funcionó, qué aburrió y por qué se abandonó
+vale más que cualquier decisión de arquitectura tomada en frío.
 
 ---
 
 ## Siguiente paso
 
-Una sesión hablada de 20-30 minutos para tener línea base. Sin eso, todo lo demás es diseñar a
-ciegas.
+Usar el tutor durante dos o tres semanas **sin web**. Sale gratis, funciona hoy, y al final se
+sabrá qué partes se usan de verdad y cuáles sobran.
+
+Construir la web antes de eso es adivinar qué interfaz hace falta.

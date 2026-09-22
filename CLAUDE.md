@@ -126,12 +126,17 @@ Mínimos en todo cambio:
 ### Específico de este proyecto
 
 - Los datos de progreso son **personales**: nivel, errores, grabaciones de voz. El repositorio es
-  público; esos datos viven en `private/`, fuera del control de versiones. Ninguna función nueva
-  puede escribir datos de un usuario real fuera de ahí.
+  público; esos datos viven en la base de datos, nunca en el árbol versionado. Ninguna función
+  nueva puede escribir datos de un usuario real en un fichero del repo.
 - **Ningún audio ni transcripción se sube a un tercero** sin que esté escrito en el README qué se
-  envía y a dónde.
-- Si algún día se expone en la web pública del portafolio, la ruta va **detrás de autenticación**,
-  no solo de una URL difícil de adivinar.
+  envía y a dónde. Ahora mismo: nada sale.
+- **Todo detrás de autenticación.** Un solo usuario, pero una URL difícil de adivinar no es
+  autenticación.
+- **La aplicación no llama a ningún modelo de IA.** El contenido está pre-generado por el agente
+  entre sesiones. Una llamada en tiempo de ejecución rompe el coste cero y la independencia de
+  cualquier API.
+- El micrófono se habilita **por ruta**, nunca globalmente, y sin tocar el resto de cabeceras de
+  seguridad.
 
 ---
 
