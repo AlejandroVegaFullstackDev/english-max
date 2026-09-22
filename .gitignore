@@ -1,0 +1,76 @@
+# ─────────────────────────────────────────────────────────────
+#  DATOS PERSONALES — nunca se publican
+#
+#  Este repositorio es open source. Todo lo que describa a una
+#  persona concreta (nivel, errores, grabaciones, planes) vive
+#  fuera del control de versiones.
+#
+#  Si añades una carpeta nueva con datos de usuario, añádela
+#  aquí ANTES del primer commit.
+# ─────────────────────────────────────────────────────────────
+
+private/*
+!private/README.md
+
+# Progreso, errores y evaluaciones de un usuario real
+progress/
+mistakes/*
+!mistakes/.gitkeep
+!mistakes/README.md
+assessments/*
+!assessments/.gitkeep
+!assessments/README.md
+
+# Grabaciones de voz: datos biométricos, nunca al repo
+*.mp3
+*.m4a
+*.wav
+*.ogg
+*.webm
+*.mp4
+recordings/
+
+# Salida de análisis de pronunciación (contiene transcripciones)
+*.pronunciation.json
+analysis/
+
+# ─────────────────────────────────────────────────────────────
+#  SECRETOS
+# ─────────────────────────────────────────────────────────────
+
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+credentials*
+*_token*
+*apikey*
+
+# ─────────────────────────────────────────────────────────────
+#  Modelos y build
+# ─────────────────────────────────────────────────────────────
+
+models/
+*.onnx
+*.gguf
+*.safetensors
+node_modules/
+dist/
+.astro/
+.vercel/
+__pycache__/
+.venv/
+venv/
+
+# ─────────────────────────────────────────────────────────────
+#  SO y editores
+# ─────────────────────────────────────────────────────────────
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+scratch/
+*.local.md
