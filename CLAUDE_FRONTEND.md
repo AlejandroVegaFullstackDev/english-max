@@ -1,6 +1,6 @@
 # CLAUDE_FRONTEND.md — Reglas de frontend
 
-Define cómo debe comportarse Claude Code al trabajar en la interfaz de este proyecto.
+Define cómo debe comportarse cualquier agente de código al trabajar en la interfaz de este proyecto.
 
 > **Sobre este documento.** Alejandro lo trajo escrito para una arquitectura de **microfrontends con
 > varios equipos en paralelo** (Module Federation, dominios extraíbles a repos independientes,

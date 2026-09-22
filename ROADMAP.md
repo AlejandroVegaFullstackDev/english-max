@@ -54,6 +54,14 @@ es entender, no juzgar. OpenPronounce devuelve el fonema realmente pronunciado e
 Limitación aceptada: ~10% de error fonémico incluso con voz nativa limpia, y peor con acento
 marcado. Sirve para tendencia y patrones repetidos, no para puntuaciones absolutas.
 
+**2026-09-22 · El repositorio es público y agnóstico de agente.**
+No depende de Claude ni de ninguna IA concreta: lo único que necesita el agente es leer y escribir
+ficheros del repo. `AGENTS.md` es el punto de entrada para cualquiera de ellos. Los dos ficheros
+`CLAUDE*.md` conservan ese nombre por la convención de Claude Code, pero su contenido son reglas de
+ingeniería normales que aplica cualquier agente.
+La materia de referencia sigue siendo inglés porque es el caso real que hay que resolver; la
+estructura no asume idioma ni materia.
+
 ---
 
 ## Pendiente de decidir

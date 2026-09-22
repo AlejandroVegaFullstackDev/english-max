@@ -1,6 +1,6 @@
 # CLAUDE.md — Reglas de ingeniería
 
-Define cómo debe comportarse Claude Code al trabajar en este repositorio.
+Define cómo debe comportarse cualquier agente de código al trabajar en este repositorio.
 
 > **Sobre este documento.** Alejandro lo trajo escrito para Flask + SQLAlchemy y pidió generalizarlo,
 > con razón: *"si lo piensas es lo mismo, debe ser para cualquier acto de programación e
@@ -125,8 +125,9 @@ Mínimos en todo cambio:
 
 ### Específico de este proyecto
 
-- Los datos de progreso son **personales**: nivel de inglés, errores, grabaciones de voz. El
-  repositorio es privado y debe seguir siéndolo.
+- Los datos de progreso son **personales**: nivel, errores, grabaciones de voz. El repositorio es
+  público; esos datos viven en `private/`, fuera del control de versiones. Ninguna función nueva
+  puede escribir datos de un usuario real fuera de ahí.
 - **Ningún audio ni transcripción se sube a un tercero** sin que esté escrito en el README qué se
   envía y a dónde.
 - Si algún día se expone en la web pública del portafolio, la ruta va **detrás de autenticación**,

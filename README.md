@@ -122,7 +122,8 @@ prompts/       instrucciones para el agente
 vocabulary/ grammar/ listening/ speaking/ writing/
 ```
 
-Reglas de desarrollo: [CLAUDE.md](CLAUDE.md) (backend, agnóstico de lenguaje) y
+Si abres esto con un agente, empieza por [AGENTS.md](AGENTS.md) — funciona con cualquiera, no solo
+con Claude. Reglas de desarrollo: [CLAUDE.md](CLAUDE.md) (backend, agnóstico de lenguaje) y
 [CLAUDE_FRONTEND.md](CLAUDE_FRONTEND.md). Decisiones y su porqué: [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ---
